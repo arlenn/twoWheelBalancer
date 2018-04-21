@@ -20,6 +20,8 @@
 #include "driverlib/sysctl.h"
 #include "driverlib/gpio.h"
 #include "driverlib/pin_map.h"
+#include "driverlib/sysctl.h"
+#include "driverlib/rom.h"
 
 
 /************************************************************************************
@@ -39,7 +41,38 @@ void InitIMUEuler(void){
     BNO055_I2C_write_BB(BNO055_I2C_ADDR1,BNO055_OPR_MODE_ADDR,DNOF); //set to DNOF mode
     BNO055_I2C_write_BB(BNO055_I2C_ADDR1,BNO055_UNIT_SEL_ADDR,0x00); //set too degree mode
 
+    /*
+     * setup reset pin
+     */
+
+    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);  //GPIO
+    ROM_GPIOPinTypeGPIOOutput(GPIO_PORTB_BASE, GPIO_PIN_4);
+    GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_4, GPIO_PIN_4);  //pin is high, IMU should be in NORMAL operation
 }
+
+
+/************************************************************************************
+ * Function: resetIMU
+ * initialize reset / re-init BNO055 for reading absolute euler angles
+
+ * argument:
+ * return: void.
+ * Author: Hardy Nelson & Kushant Gounder
+ * Date:
+ * Revision:
+ *************************************************************************************/
+
+void resetIMU(void){
+
+    GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_4, 0);  //pin is low, IMU should be in RESET mode
+    SysCtlDelay(1333333); //wait, 3x CPU cycles, approx 0.1s
+    GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_4, GPIO_PIN_4);
+    InitIMUEuler();
+}
+
+
+
+
 
 
 /************************************************************************************
@@ -66,9 +99,9 @@ void GetEulerAngles(double *euler_h_d, double *euler_r_d, double *euler_p_d){
     s16 pitch;
     s8 *pitchptr;
 
-    headingptr = &heading;
-    rollptr = &roll;
-    pitchptr = &pitch;
+    headingptr = (s8*)&heading;
+    rollptr = (s8*)&roll;
+    pitchptr = (s8*)&pitch;
 
     //get 6 bytes needed for euler angles from sensor
     BNO055_I2C_read_BB(BNO055_I2C_ADDR1,BNO055_EULER_H_LSB_ADDR,reg_data,EULER_RAW_DATA);

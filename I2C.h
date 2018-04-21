@@ -5,7 +5,7 @@
  *      Author: Hardy Nelson & Kushant Gounder
  */
 
-#include <bno055.h>
+#include "bno055.h"
 
 
 #ifndef I2C_H_

@@ -13,12 +13,17 @@
 #define EULER_RAW_DATA 6 //heading roll and pitch are all 2 bytes so we need 6 bytes from the IMU
 
 void InitIMUEuler(void);
+
+void resetIMU(void);
+
 void GetEulerAngles(double *euler_h_d, double *euler_r_d, double *euler_p_d);
 
 
 #endif /*euler_H_ */
 
-
+ /*
+  * RESET PIN MUST BE HELD HIGH FOR OPERATION
+  */
 
 /*
  * example code on how to use each function to get euler angles

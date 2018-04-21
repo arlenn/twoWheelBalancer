@@ -91,7 +91,6 @@ void BNO055_I2C_write_BB(u8 dev_addr, u8 reg_addr, u8 reg_data)
    //wait for MCU to finish transaction
    while(I2CMasterBusy(I2C0_BASE));
 
-
    //specify data to be written to the above mentioned reg_data
    I2CMasterDataPut(I2C0_BASE, reg_data);
 
