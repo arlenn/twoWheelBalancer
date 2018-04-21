@@ -139,30 +139,35 @@ uint8_t mtrDrvSpeed (uint32_t motor, uint8_t dir, uint8_t duty) {
     pwmPeriod = ROM_PWMGenPeriodGet(PWM1_BASE, PWM_GEN_0);
 
     /*
-     * ui32Load = 100% duty, ui32Load / 2 = 50%, etc.
-     */
-    ROM_PWMPulseWidthSet(PWM1_BASE, motor, pwmPeriod*duty/100 );
-
-    /*
      * one motor will have have it's direction reversed, as the driver output will be in the same direction
      * but the motor is oriented in the opposite direction.... or just do it in the wiring
      */
 
+    //ROM_PWMPulseWidthSet(PWM1_BASE, motor, 0);
+
     switch (motor) {
     case MOTOR_LEFT:
         if (dir == REVERSE) GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_5, GPIO_PIN_5);
-        else ROM_GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_5, false);
+        else ROM_GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_5, 0);
         break;
 
     case MOTOR_RIGHT:
-        if (dir == REVERSE) GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, false);
-        else ROM_GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_5, GPIO_PIN_5);
+        if (dir == REVERSE) GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, 0);
+        else ROM_GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_5, GPIO_PIN_5);
         break;
 
     default:
         return EXIT_FAILURE;
 
     }
+
+    /*
+     * ui32Load = 100% duty, ui32Load / 2 = 50%, etc.
+     */
+    ROM_PWMPulseWidthSet(PWM1_BASE, motor, pwmPeriod*duty/100 );
+
+
+
 
     return EXIT_SUCCESS;
 }

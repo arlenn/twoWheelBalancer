@@ -5,6 +5,7 @@
  *      Author: hardyn
  */
 #include <stdint.h>
+
 #ifndef MTRDRV_H_
 #define MTRDRV_H_
 
