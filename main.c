@@ -26,7 +26,7 @@
 #include "driverlib/timer.h"
 #include "uartstdio.h"
 
-#define sampleRate 100 //Hz
+#define SAMPLERATE 100 //Hz
 
 
 int main(void) {
@@ -42,7 +42,7 @@ int main(void) {
     qeiInit();
     uartInit();
     InitIMUEuler();
-    schedulerInit(sampleRate); //hz
+    schedulerInit(SAMPLERATE); //hz
 
 
     /*
@@ -50,11 +50,6 @@ int main(void) {
      */
     mtrDrvEnable(MOTOR_LEFT, true);
     mtrDrvEnable(MOTOR_RIGHT, true);
-
-    //mtrDrvSpeed(MOTOR_LEFT, FORWARD, 50);
-    //mtrDrvSpeed(MOTOR_RIGHT, REVERSE, 50);
-
-
 
     while (1);
 
@@ -72,21 +67,22 @@ void Timer0IntHandler(void)
     static double currAngle;
 
     // Clear the timer interrupt
-    TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
+
 
     // Do the thing
     GetEulerAngles( (double*)&euler_h, (double*)&euler_r, (double*)&euler_p);
-    output = pid(0.0, euler_p, 5.0, 1.0, 1.0, 45.0, 35.0, sampleTime, 3.0);  //setpoint deg., measurement, kp, ki, kd,
+
+    output = pid(0.0, euler_p, 3.5, 0.0, 0.0, 45.0, 35.0, SAMPLERATE, 5.0);  //setpoint deg., measurement, kp, ki, kd,
                                                                              //give-up angle deg., full-power angle deg.,
-                                                                             //sample-time s, minimum output %
+                                                                             //sample-time s, minimum output
+    currAngle = euler_p;
 
-
-    //currAngle = euler_p;
-
-    //if (currAngle > 0) currAngle = currAngle - 180.0;
-    //else currAngle = currAngle + 180.0;
+    if (currAngle > 0) currAngle = currAngle - 180.0;
+    else currAngle = currAngle + 180.0;
 
     //UARTprintf("euler_p= %i, output= %i\n", (int)currAngle, output);
+
+    TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
 
 }
 

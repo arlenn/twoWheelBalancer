@@ -23,16 +23,16 @@
 
 uint8_t uartInit(void) {
 
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_UART1);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
 
-    GPIOPinConfigure(GPIO_PA0_U0RX);
-    GPIOPinConfigure(GPIO_PA1_U0TX);
+    GPIOPinConfigure(GPIO_PB0_U1RX);
+    GPIOPinConfigure(GPIO_PB1_U1TX);
 
-    GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+    GPIOPinTypeUART(GPIO_PORTB_BASE, GPIO_PIN_0 | GPIO_PIN_1);
 
-    UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC); //16Mhz crystal oscillator
-    UARTStdioConfig(0, 115200, 16000000);  //port 0, baud-rate, 16MHz oscillator magic number
+    UARTClockSourceSet(UART1_BASE, UART_CLOCK_PIOSC); //16Mhz crystal oscillator
+    UARTStdioConfig(1, 38400, 16000000);  //port 0, baud-rate, 16MHz oscillator magic number
 
     return EXIT_SUCCESS;
 }
