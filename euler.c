@@ -37,14 +37,6 @@
 
 void InitIMUEuler(void){
 
-    //ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);  //GPIO
-    //ROM_GPIOPinTypeGPIOOutput(GPIO_PORTB_BASE, GPIO_PIN_4);
-
-    //GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_4, 0);  //pin is low,
-    //SysCtlDelay(1333333); //wait, 3x CPU cycles, approx 0.1s
-    //GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_4, GPIO_PIN_4);  //set-pin high; IMU should be in NORMAL operation
-    //SysCtlDelay(2666666); //wait, 3x CPU cycles, approx 0.2s
-
     InitI2C0(); //initialize master
 
     BNO055_I2C_write_BB(BNO055_I2C_ADDR1,BNO055_OPR_MODE_ADDR,DNOF); //set to DNOF mode

@@ -114,12 +114,12 @@ uint8_t mtrDrvEnable(uint32_t motor, uint8_t enable) {
     case true:  //enable
 
         if (motor == MOTOR_LEFT) {
-            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_0, 0);  //no motor speed
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_0, 1);  //no motor speed
             PWMOutputState(PWM1_BASE, PWM_OUT_0_BIT, true);  //set PWM pin active
         }
 
         if (motor == MOTOR_RIGHT) {
-            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_1, 0);  // no motor speed
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_1, 1);  // no motor speed
             PWMOutputState(PWM1_BASE, PWM_OUT_1_BIT, true);  //set PWM pin active
         }
 
