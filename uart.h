@@ -11,6 +11,10 @@
 #include <stdint.h>
 
 uint8_t uartInit(void);
+void UartGetK(void);
 
+extern double kp;
+extern double ki;
+extern double kd;
 
 #endif /* UART_H_ */
