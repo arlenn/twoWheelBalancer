@@ -28,7 +28,6 @@
 
 #define SAMPLERATE 100 //Hz
 
-
 int main(void) {
 
     volatile uint32_t leftMotorPos, rightMotorPos;
@@ -39,18 +38,14 @@ int main(void) {
 //test comment
 
     tm4c123gInit(5);  //200Mhz / 5 = 40MHz system clock
+    InitIMUEuler();
+    uartInit();
+    schedulerInit(SAMPLERATE); //hz
     mtrDrvInit(64);  //PWM clock, divide system clock by 64, 2 -> 64, two's compliment
     qeiInit();
-    uartInit();
-    InitIMUEuler();
-    schedulerInit(SAMPLERATE); //hz
 
 
-    /*
-     * make a start button with these
-     */
-    mtrDrvEnable(MOTOR_LEFT, true);
-    mtrDrvEnable(MOTOR_RIGHT, true);
+    IntMasterEnable(); //enable processor interrupts
 
     while (1);
     return 0;
@@ -71,17 +66,19 @@ void Timer0IntHandler(void)
     // Do the thing
     GetEulerAngles( (double*)&euler_h, (double*)&euler_r, (double*)&euler_p);
 
-    UartGetK(); //polling for now until interrupt is made
+    //UartGetK(); //polling for now until interrupt is made
 
     output = pid(0.0, euler_p, kp, ki, kd, 45.0, 35.0, SAMPLERATE, 5.0);  //setpoint deg., measurement, kp, ki, kd,
                                                                              //give-up angle deg., full-power angle deg.,
                                                                              //sample-time s, minimum output
-    currAngle = euler_p;
+    //currAngle = euler_p;
 
-    if (currAngle > 0) currAngle = currAngle - 180.0;
-    else currAngle = currAngle + 180.0;
+    // if (currAngle > 0) currAngle = currAngle - 180.0;
+    // else currAngle = currAngle + 180.0;
 
     //UARTprintf("euler_p= %i, output= %i\n", (int)currAngle, output);
+
+    //UARTprintf("hi\n");
 
     TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
 

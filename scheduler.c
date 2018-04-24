@@ -21,8 +21,8 @@ void schedulerInit(uint32_t freq)
     TimerLoadSet(TIMER0_BASE, TIMER_A, ui32Period - 1);
 
     IntEnable(INT_TIMER0A);
+
     TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
 
-    IntMasterEnable();
     TimerEnable(TIMER0_BASE, TIMER_A);
 }
