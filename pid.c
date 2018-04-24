@@ -61,7 +61,7 @@ int32_t pid (double setPoint, double currAngle, double kp, double ki, double kd,
 
     lastError = error;
 
-    UARTprintf("currAngle= %3i, error= %3i, integral= %3i, derivative= %3i, output= %3i, lastError= %3i\r", (int)currAngle, (int)error, (int)integral, (int)derivative, (int)output, (int)lastError);
+    //UARTprintf("currAngle= %3i, error= %3i, integral= %3i, derivative= %3i, output= %3i, lastError= %3i\r", (int)currAngle, (int)error, (int)integral, (int)derivative, (int)output, (int)lastError);
 
     /*
      * determine direction

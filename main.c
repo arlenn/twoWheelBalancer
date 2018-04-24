@@ -52,7 +52,6 @@ int main(void) {
     mtrDrvEnable(MOTOR_RIGHT, true);
 
     while (1);
-
     return 0;
 }
 
@@ -65,14 +64,15 @@ void Timer0IntHandler(void)
     static double euler_h, euler_r, euler_p;
     static int8_t output;
     static double currAngle;
-
     // Clear the timer interrupt
 
 
     // Do the thing
     GetEulerAngles( (double*)&euler_h, (double*)&euler_r, (double*)&euler_p);
 
-    output = pid(0.0, euler_p, 3.5, 0.0, 0.0, 45.0, 35.0, SAMPLERATE, 5.0);  //setpoint deg., measurement, kp, ki, kd,
+    UartGetK(); //polling for now until interrupt is made
+
+    output = pid(0.0, euler_p, kp, ki, kd, 45.0, 35.0, SAMPLERATE, 5.0);  //setpoint deg., measurement, kp, ki, kd,
                                                                              //give-up angle deg., full-power angle deg.,
                                                                              //sample-time s, minimum output
     currAngle = euler_p;
