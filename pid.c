@@ -36,8 +36,8 @@ int32_t pid (double setPoint, double currAngle, double kp, double ki, double kd,
     /*
      * correct orientation
      */
-    if (currAngle >= 0.0) currAngle = currAngle - 180.0;
-    else currAngle = currAngle + 180.0;
+    //if (currAngle >= 0.0) currAngle = currAngle - 180.0;
+    //else currAngle = currAngle + 180.0;
 
     deltaTime = 1.0/scanFreq;
 
