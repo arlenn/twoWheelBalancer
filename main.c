@@ -70,9 +70,9 @@ void Timer0IntHandler(void)
 
     //UartGetK(); //polling for now until interrupt is made
 
-    output = pid(0.0, euler_p, kp, ki, kd, 45.0, 35.0, SAMPLERATE, 1.0);  //setpoint deg., measurement, kp, ki, kd,
-                                                                             //give-up angle deg., full-power angle deg.,
-                                                                             //sample-time s, minimum output
+    output = pid(0.1, euler_p, kp, ki, kd, 45.0, 35.0, SAMPLERATE, 1.0);  //setpoint deg., measurement, kp, ki, kd,
+                                                                          //give-up angle deg., full-power angle deg.,
+                                                                          //sample-time s, minimum output
 
     TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
 

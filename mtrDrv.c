@@ -136,6 +136,7 @@ uint8_t mtrDrvEnable(uint32_t motor, uint8_t enable) {
 uint8_t mtrDrvSpeed (uint32_t motor, uint8_t dir, uint8_t duty) {
 
     volatile uint32_t pwmPeriod;
+    static volatile double u32Duty;
     pwmPeriod = PWMGenPeriodGet(PWM1_BASE, PWM_GEN_0);
 
     /*
@@ -161,10 +162,11 @@ uint8_t mtrDrvSpeed (uint32_t motor, uint8_t dir, uint8_t duty) {
 
     }
 
-    /*
-     * ui32Load = 100% duty, ui32Load / 2 = 50%, etc.
-     */
-    PWMPulseWidthSet(PWM1_BASE, motor, pwmPeriod*duty/100 );
+    u32Duty = (uint32_t) (pwmPeriod*duty/100.0);
+    if (u32Duty <= 0) u32Duty = 1;
+    else if (u32Duty > 99) u32Duty = 99;
+
+    PWMPulseWidthSet(PWM1_BASE, motor, u32Duty);
 
 
 

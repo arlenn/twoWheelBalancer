@@ -53,8 +53,8 @@ int32_t pid (double setPoint, double currAngle, double kp, double ki, double kd,
     /*
      * determine direction
      */
-    if (output < 0.0) dir = FORWARD;
-    else dir = REVERSE;
+    if (output < 0.0) dir = REVERSE;
+    else dir = FORWARD;
 
     /*
      * bound PWM duty

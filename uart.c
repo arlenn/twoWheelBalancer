@@ -35,6 +35,8 @@ double kp = 0;
 double ki = 0;
 double kd = 0;
 
+#define MAX_STR_LEN 24
+
 uint8_t uartInit(void) {
 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_UART1);
@@ -60,8 +62,8 @@ uint8_t uartInit(void) {
 
 void UartGetK(void){
 
-    static char buffer[12];
-    static uint32_t bufflen = 12;
+    static char buffer[MAX_STR_LEN];
+    static uint32_t bufflen = MAX_STR_LEN;
     static char *delimeter = { " \n\r" };
     static char *command;
     static char *kpString;
