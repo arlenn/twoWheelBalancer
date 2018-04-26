@@ -34,6 +34,7 @@
 double kp = 0;
 double ki = 0;
 double kd = 0;
+double kc = 0;
 
 #define MAX_STR_LEN 24
 
@@ -69,6 +70,7 @@ void UartGetK(void){
     static char *kpString;
     static char *kiString;
     static char *kdString;
+    static char *kcString;
 
     UARTgets(buffer, bufflen);
 
@@ -104,6 +106,12 @@ void UartGetK(void){
         kd = atof(kdString);
     }
 
+    else if (!(strcmp(command, "kc")))
+    {
+        kcString = strtok('\0', delimeter);
+        kc = atof(kcString);
+    }
+
     else if (!(strcmp(command, "k")))
     {
         kpString = strtok('\0', delimeter);
@@ -114,6 +122,9 @@ void UartGetK(void){
 
         kdString = strtok('\0', delimeter);
         kd = atof(kdString);
+
+        kcString = strtok('\0', delimeter);
+        kc = atof(kcString);
     }
 
     else
