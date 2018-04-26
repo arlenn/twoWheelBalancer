@@ -30,56 +30,42 @@ int32_t pid (double setPoint, double currAngle, double kp, double ki, double kd,
     volatile static double integral;
     volatile static double derivative;
     volatile static double deltaTime;
-    volatile static float output;
+    volatile static double output;
     volatile static uint32_t dir;
 
     /*
-     * corrent orientation
+     * correct orientation
      */
-    if (currAngle > 0) currAngle = currAngle - 180.0;
-    else currAngle = currAngle + 180.0;
+    //if (currAngle >= 0.0) currAngle = currAngle - 180.0;
+    //else currAngle = currAngle + 180.0;
 
     deltaTime = 1.0/scanFreq;
 
-    //UARTprintf("currAngle= %i\n", (int)currAngle);
-
-    error = setPoint - currAngle; //the P
-
-    //UARTprintf("error= %i\n", (int)error);
-
-    integral = integral + (error * deltaTime);
-
-    //UARTprintf("integral= %i\n", (int)integral);
-
-    derivative = (error - lastError) / deltaTime;
-
-    //UARTprintf("derivative= %i\n", (int)derivative);
+    error = setPoint - currAngle;  //proportionals
+    integral = integral + (error * deltaTime);  //integral
+    derivative = (error - lastError) / deltaTime;  //derivative
+    lastError = error;
 
     output = (error * kp) + (integral * ki) + (derivative * kd);  //in percent
 
-    //UARTprintf("output= %i\n", (int)output);
-
-    lastError = error;
-
-    UARTprintf("currAngle= %3i, error= %3i, integral= %3i, derivative= %3i, output= %3i, lastError= %3i\r", (int)currAngle, (int)error, (int)integral, (int)derivative, (int)output, (int)lastError);
+    UARTprintf("currAngle= %4i, kp= %2i, ki= %2i, kd= %2i, output= %4i\r", (int)currAngle, (int)kp, (int)ki, (int)kd, (int)output);
 
     /*
      * determine direction
      */
-    if (output < 0) dir = FORWARD;
-    else dir = REVERSE;
+    if (output < 0.0) dir = REVERSE;
+    else dir = FORWARD;
 
-    //UARTprintf("dir= %i\n", (int)dir);
+    /*
+     * bound PWM duty
+     */
+    if (fabs(output) > 100.0 ) output = 100.0;
+    else if (fabs(output) < minPercent ) output = minPercent;  //this min thing might not be a good idea?
 
-    if (abs(output) > 100 ) output = 100;
-    else if (abs(output) < minPercent ) output = minPercent;
+    if (fabs(currAngle) > failAngle) output = 0.0;
 
-    if (abs(currAngle) > failAngle) output = 0;
-
-    mtrDrvSpeed(MOTOR_LEFT, dir, abs(output));
-    mtrDrvSpeed(MOTOR_RIGHT, dir, abs(output));
+    mtrDrvSpeed(MOTOR_LEFT, dir, (uint32_t) (fabs(output)) );
+    mtrDrvSpeed(MOTOR_RIGHT, dir, (uint32_t) (fabs(output)) );
 
     return dir;
 }
-
-

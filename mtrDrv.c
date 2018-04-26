@@ -114,12 +114,12 @@ uint8_t mtrDrvEnable(uint32_t motor, uint8_t enable) {
     case true:  //enable
 
         if (motor == MOTOR_LEFT) {
-            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_0, 0);  //no motor speed
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_0, 1);  //no motor speed
             PWMOutputState(PWM1_BASE, PWM_OUT_0_BIT, true);  //set PWM pin active
         }
 
         if (motor == MOTOR_RIGHT) {
-            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_1, 0);  // no motor speed
+            PWMPulseWidthSet(PWM1_BASE, PWM_OUT_1, 1);  // no motor speed
             PWMOutputState(PWM1_BASE, PWM_OUT_1_BIT, true);  //set PWM pin active
         }
 
@@ -136,6 +136,7 @@ uint8_t mtrDrvEnable(uint32_t motor, uint8_t enable) {
 uint8_t mtrDrvSpeed (uint32_t motor, uint8_t dir, uint8_t duty) {
 
     volatile uint32_t pwmPeriod;
+    static volatile double u32Duty;
     pwmPeriod = PWMGenPeriodGet(PWM1_BASE, PWM_GEN_0);
 
     /*
@@ -161,10 +162,11 @@ uint8_t mtrDrvSpeed (uint32_t motor, uint8_t dir, uint8_t duty) {
 
     }
 
-    /*
-     * ui32Load = 100% duty, ui32Load / 2 = 50%, etc.
-     */
-    PWMPulseWidthSet(PWM1_BASE, motor, pwmPeriod*duty/100 );
+    u32Duty = (uint32_t) (pwmPeriod*duty/100.0);
+    if (u32Duty <= 0) u32Duty = 1;
+    else if (u32Duty > 99) u32Duty = 99;
+
+    PWMPulseWidthSet(PWM1_BASE, motor, u32Duty);
 
 
 
