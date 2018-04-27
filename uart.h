@@ -16,5 +16,6 @@ void UartGetK(void);
 extern double kp;
 extern double ki;
 extern double kd;
+extern double kc;
 
 #endif /* UART_H_ */

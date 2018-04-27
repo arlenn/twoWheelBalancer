@@ -34,6 +34,9 @@
 double kp = 0;
 double ki = 0;
 double kd = 0;
+double kc = 0;
+
+#define MAX_STR_LEN 24
 
 uint8_t uartInit(void) {
 
@@ -60,46 +63,73 @@ uint8_t uartInit(void) {
 
 void UartGetK(void){
 
-    static char buffer[12];
-    static uint32_t bufflen = 12;
+    static char buffer[MAX_STR_LEN];
+    static uint32_t bufflen = MAX_STR_LEN;
     static char *delimeter = { " \n\r" };
     static char *command;
     static char *kpString;
     static char *kiString;
     static char *kdString;
+    static char *kcString;
 
-    UARTgets(buffer, bufflen); // wait for carriage return from UART
-    //parse string in for kp ki and kd then turn then into double
+    UARTgets(buffer, bufflen);
 
     command = strtok(buffer,delimeter);
 
-    if ( !(strcmp(command, "st")) )
+    if (!(strcmp(command, "st")))
     {
         mtrDrvEnable(MOTOR_LEFT, true);
         mtrDrvEnable(MOTOR_RIGHT, true);
     }
 
-    else if ( !(strcmp(command, "sp")) )
+    else if (!(strcmp(command, "sp")))
     {
         mtrDrvEnable(MOTOR_LEFT, false);
         mtrDrvEnable(MOTOR_RIGHT, false);
     }
 
-    else if ( !(strcmp(command, "k")) )
+    else if (!(strcmp(command, "kp")))
     {
-        kpString = strtok('\0',delimeter);
-            kp = atof(kpString);
+        kpString = strtok('\0', delimeter);
+        kp = atof(kpString);
+    }
+
+    else if (!(strcmp(command, "ki")))
+    {
+        kiString = strtok('\0', delimeter);
+        ki = atof(kiString);
+    }
+
+    else if (!(strcmp(command, "kd")))
+    {
+        kdString = strtok('\0', delimeter);
+        kd = atof(kdString);
+    }
+
+    else if (!(strcmp(command, "kc")))
+    {
+        kcString = strtok('\0', delimeter);
+        kc = atof(kcString);
+    }
+
+    else if (!(strcmp(command, "k")))
+    {
+        kpString = strtok('\0', delimeter);
+        kp = atof(kpString);
 
         kiString = strtok('\0', delimeter);
-            ki = atof(kiString);
+        ki = atof(kiString);
 
         kdString = strtok('\0', delimeter);
-            kd = atof(kdString);
+        kd = atof(kdString);
+
+        kcString = strtok('\0', delimeter);
+        kc = atof(kcString);
     }
 
     else
     {
-        UARTprintf ("command not recognized\n");
+        UARTprintf("command not recognized\n");
     }
 }
 

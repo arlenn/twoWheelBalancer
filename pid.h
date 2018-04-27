@@ -8,7 +8,7 @@
 #ifndef PID_H_
 #define PID_H_
 
-int32_t pid (double setPoint, double currAngle, double kp, double ki, double kd, double failAngle, double maxAng, double deltaTime, double minPercent);
+int32_t pid (double setPoint, double currAngle, double kp, double ki, double kd, double kc, double failAngle, double maxAng, double deltaTime, double minPercent);
 
 
 
