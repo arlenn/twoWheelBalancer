@@ -27,6 +27,8 @@
 
 
 
+
+
 int tm4c123gInit (uint8_t clockSpeed) {
 
     /*
@@ -47,6 +49,8 @@ int tm4c123gInit (uint8_t clockSpeed) {
      */
     ROM_FPULazyStackingEnable();
     ROM_FPUEnable();
+
+
 
     return EXIT_SUCCESS;
 }

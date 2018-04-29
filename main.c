@@ -29,15 +29,12 @@
 #define SAMPLERATE 100 //Hz
 
 double euler_h, euler_r, euler_p;
+double leftMotorPos, rightMotorPos;
+int32_t outputSAT;
 
 int main(void) {
 
     volatile uint32_t leftMotorPos, rightMotorPos;
-
-    //volatile double euler_h, euler_r, euler_p;
-
-    //volatile double test;
-//test comment
 
     tm4c123gInit(5);  //200Mhz / 5 = 40MHz system clock
     InitIMUEuler();
@@ -46,10 +43,18 @@ int main(void) {
     mtrDrvInit(64);  //PWM clock, divide system clock by 64, 2 -> 64, two's compliment
     qeiInit();
 
-
     IntMasterEnable(); //enable processor interrupts
 
-    while (1);
+    //initial conditions
+    kp = 4.100;
+    ki = 0.025;
+    kd = 0.075;
+    kc = 0.01;
+
+    while (1){
+       UARTprintf("currAngle= %4i, outputSAT= %4i\r", (int)euler_p, (int)outputSAT);
+    }
+
     return 0;
 }
 
@@ -60,19 +65,15 @@ int main(void) {
 void Timer0IntHandler(void)
 {
 
-    static int8_t output;
-    static double currAngle;
-    // Clear the timer interrupt
-
-
     // Do the thing
-    GetEulerAngles( (double*)&euler_h, (double*)&euler_r, (double*)&euler_p);
+    GetEulerAngles(&euler_h, &euler_r, &euler_p);  //read values from the IMU, unit: degree
+    qeiGetPos(&leftMotorPos, &rightMotorPos);  //read values from the encoders, unit: mm
 
-    //UartGetK(); //polling for now until interrupt is made
+     outputSAT = pid(-4.0, euler_p, kp, ki, kd, kc, 60.0, 35.0, SAMPLERATE, 1.0); //setpoint deg., measurement, kp, ki, kd,
+                                                                                 //give-up angle deg., full-power angle deg.,
+                                                                                 //sample-time s, minimum output
 
-    output = pid(0.1, euler_p, kp, ki, kd, kc, 45.0, 35.0, SAMPLERATE, 1.0);  //setpoint deg., measurement, kp, ki, kd,
-                                                                          //give-up angle deg., full-power angle deg.,
-                                                                          //sample-time s, minimum output
+
 
     TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
 
