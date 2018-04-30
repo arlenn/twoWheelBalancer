@@ -37,8 +37,9 @@ int main(void) {
     volatile uint32_t leftMotorPos, rightMotorPos;
 
     tm4c123gInit(5);  //200Mhz / 5 = 40MHz system clock
-    InitIMUEuler();
     uartInit();
+    InitIMUEuler();
+
     schedulerInit(SAMPLERATE); //hz
     mtrDrvInit(64);  //PWM clock, divide system clock by 64, 2 -> 64, two's compliment
     qeiInit();
@@ -47,9 +48,9 @@ int main(void) {
 
     //initial conditions
     kp = 4.100;
-    ki = 0.025;
-    kd = 0.075;
-    kc = 0.01;
+    ki = 0.017;
+    kd = 0.0065;  //0.0069
+    kc = 0.016;  //0.0165
 
     while (1){
        UARTprintf("currAngle= %4i, outputSAT= %4i\r", (int)euler_p, (int)outputSAT);
@@ -69,7 +70,7 @@ void Timer0IntHandler(void)
     GetEulerAngles(&euler_h, &euler_r, &euler_p);  //read values from the IMU, unit: degree
     qeiGetPos(&leftMotorPos, &rightMotorPos);  //read values from the encoders, unit: mm
 
-     outputSAT = pid(-4.0, euler_p, kp, ki, kd, kc, 60.0, 35.0, SAMPLERATE, 1.0); //setpoint deg., measurement, kp, ki, kd,
+     outputSAT = pid(0.0, euler_p, kp, ki, kd, kc, 85.0, 35.0, SAMPLERATE, 1.0); //setpoint deg., measurement, kp, ki, kd,
                                                                                  //give-up angle deg., full-power angle deg.,
                                                                                  //sample-time s, minimum output
 
