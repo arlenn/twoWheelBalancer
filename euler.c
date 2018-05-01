@@ -23,6 +23,8 @@
 #include "driverlib/sysctl.h"
 #include "driverlib/rom.h"
 
+#include "uartstdio.h"
+
 
 /************************************************************************************
  * Function: InitI2C0
@@ -36,16 +38,27 @@
  *************************************************************************************/
 
 void InitIMUEuler(void){
+    u8 CalibStat = 0;
 
     InitI2C0(); //initialize master
-
     SysCtlDelay(13333333);  // 3clocks * 1/40e-6s = ~1.0 sec; IMU requires 600ms to become "alive"
+
 
     BNO055_I2C_write_BB(BNO055_I2C_ADDR1,BNO055_AXIS_MAP_SIGN_ADDR,0x05); // change orientation of sensor
     //BNO055_I2C_write_BB(BNO055_I2C_ADDR1,BNO055_AXIS_MAP_CONFIG_ADDR,0x21); // change orientation of sensor
 
-    BNO055_I2C_write_BB(BNO055_I2C_ADDR1,BNO055_OPR_MODE_ADDR,DNOF); //set to DNOF mode
+    BNO055_I2C_write_BB(BNO055_I2C_ADDR1,BNO055_OPR_MODE_ADDR,DNOF); //set to NDOF mode
     BNO055_I2C_write_BB(BNO055_I2C_ADDR1,BNO055_UNIT_SEL_ADDR,0x00); //set to degree mode
+
+
+    ///////////////////////////////wait until sensor is calibrated
+    while(CalibStat < 240){
+    BNO055_I2C_read_BB(BNO055_I2C_ADDR1, BNO055_CALIB_STAT_ADDR, &CalibStat,1);
+    UARTprintf("not calibrated: CalibStat = %i\r", (int)CalibStat);
+    }
+
+    UARTprintf("\n calibrated : CalibStat = %i\r", (int)CalibStat);
+
 
 }
 
