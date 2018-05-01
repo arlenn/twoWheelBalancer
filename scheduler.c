@@ -10,6 +10,19 @@
 #include "driverlib/gpio.h"
 #include "driverlib/timer.h"
 
+
+/************************************************************************************
+ * Function: schedulerInit
+ * configure ISR for motion control update
+ * configured as highest priory task
+
+ * argument: control loop frequency, Hz
+ * return: void
+ * Author: Hardy Nelson
+ * Date:
+ * Revision:
+ *************************************************************************************/
+
 void schedulerInit(uint32_t freq)
 {
     uint32_t ui32Period;
@@ -19,6 +32,8 @@ void schedulerInit(uint32_t freq)
 
     ui32Period = (SysCtlClockGet() / freq);
     TimerLoadSet(TIMER0_BASE, TIMER_A, ui32Period - 1);
+
+    IntPrioritySet(INT_TIMER0A, 0);
 
     IntEnable(INT_TIMER0A);
 

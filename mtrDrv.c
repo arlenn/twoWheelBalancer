@@ -26,10 +26,17 @@
 #include "driverlib/pin_map.h"
 #include "driverlib/rom.h"
 
-/*
- * mtrDrvInit()
- * Initialize the PWM and GPIO components to control the Pololu G2 motor driver
- */
+
+/************************************************************************************
+ * Function: mtrDrvInit
+ * initialize GPIO for PWM generation
+
+ * argument: main-clock division
+ * return: success/fail
+ * Author: Hardy Nelson
+ * Date:
+ * Revision:
+ *************************************************************************************/
 
 uint8_t mtrDrvInit(uint8_t pwmDiv) {
 
@@ -96,6 +103,19 @@ uint8_t mtrDrvInit(uint8_t pwmDiv) {
     return EXIT_SUCCESS;
 }
 
+
+
+/************************************************************************************
+ * Function: mtrDrvEnable
+ * enable PWM clock
+
+ * argument: MOTOR_LEFT / MOTOR_RIGHT, true / false
+ * return: success/fail
+ * Author: Hardy Nelson
+ * Date:
+ * Revision:
+ *************************************************************************************/
+
 uint8_t mtrDrvEnable(uint32_t motor, uint8_t enable) {
     /*
      * PWM module 1, generator 0 needs to be enabled as an output and enabled to run.
@@ -133,6 +153,18 @@ uint8_t mtrDrvEnable(uint32_t motor, uint8_t enable) {
     return EXIT_SUCCESS;
 }
 
+
+/************************************************************************************
+ * Function: mtrDrvSpeed
+ * adjust PWM duty 1-99%
+
+ * argument: MOTOR_LEFT / MOTOR_RIGHT, FORWARD/REVERSE, duty %
+ * return: success/fail
+ * Author: Hardy Nelson
+ * Date:
+ * Revision:
+ *************************************************************************************/
+
 uint8_t mtrDrvSpeed (uint32_t motor, uint8_t dir, uint8_t duty) {
 
     volatile uint32_t pwmPeriod;
@@ -167,9 +199,6 @@ uint8_t mtrDrvSpeed (uint32_t motor, uint8_t dir, uint8_t duty) {
     else if (u32Duty > 99) u32Duty = 99;
 
     PWMPulseWidthSet(PWM1_BASE, motor, u32Duty);
-
-
-
 
     return EXIT_SUCCESS;
 }
