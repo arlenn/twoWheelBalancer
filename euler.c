@@ -62,12 +62,6 @@ void InitIMUEuler(void){
 
 }
 
-void ResetIMU(void){
-
-    BNO055_I2C_write_BB(BNO055_I2C_ADDR1,BNO055_OPR_MODE_ADDR,DNOF); //set to DNOF mode
-    BNO055_I2C_write_BB(BNO055_I2C_ADDR1,BNO055_UNIT_SEL_ADDR,0x00); //set to degree mode
-}
-
 
 
 

@@ -60,9 +60,18 @@ int main(void) {
 }
 
 
-/*
- * Timer ISR
- */
+/************************************************************************************
+ * Function: Timer0IntHandler
+ * get Euler angles from IMU,
+ * read values from encoders on MCU
+ * call pid algorithm
+
+ * argument: void
+ * return: void
+ * Author: Hardy Nelson & Kushant Gounder
+ * Date: March.18/2018
+ * Revision:
+ *************************************************************************************/
 void Timer0IntHandler(void)
 {
 
@@ -70,9 +79,9 @@ void Timer0IntHandler(void)
     GetEulerAngles(&euler_h, &euler_r, &euler_p);  //read values from the IMU, unit: degree
     qeiGetPos(&leftMotorPos, &rightMotorPos);  //read values from the encoders, unit: mm
 
-     outputSAT = pid(0.0, euler_p, kp, ki, kd, kc, 85.0, 35.0, SAMPLERATE, 1.0); //setpoint deg., measurement, kp, ki, kd,
+     outputSAT = pid(0.0, euler_p, kp, ki, kd, kc, 85.0, SAMPLERATE); //setpoint deg., measurement, kp, ki, kd,
                                                                                  //give-up angle deg., full-power angle deg.,
-                                                                                 //sample-time s, minimum output
+                                                                                 //sample-time
 
 
 

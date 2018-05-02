@@ -26,9 +26,18 @@
 #include "driverlib/fpu.h"
 
 
-
-
-
+/************************************************************************************
+ * Function: tm4c123gInit
+ * configure MCU clock speed to 40Mhz
+ * enable floating point unit of MCU
+ *
+ * argument:
+ * clockSpeed : divisor of 200MHz clock to calculate desired system clock
+ * return: 0
+ * Author: Hardy Nelson
+ * Date:
+ * Revision:
+ *************************************************************************************/
 int tm4c123gInit (uint8_t clockSpeed) {
 
     /*

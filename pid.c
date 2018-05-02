@@ -20,8 +20,31 @@
 #include "driverlib/pin_map.h"
 #include "driverlib/rom.h"
 
+/************************************************************************************
+ * Function: pid
+ * calculate duty cycle for  PWM
+ * saturate duty cyle to be less than or equal to 100%
+ * determine direction motors should move
+ * check if robot has moved beyond fail angle
+ * output PWM to motors
 
-int32_t pid (double setPoint, double currAngle, double kp, double ki, double kd, double kc, double failAngle, double maxAng, double scanFreq, double minPercent)
+ * argument:
+ * - setPoint: angle of which the robot is trying to stay (in degrees)
+ * - currAngle: Euler angle of current angle of robot (in degrees)
+ * - kp: gain for proportional error
+ * - ki: gain for integral error
+ * - kd: gain for derivative error
+ * - kc: gain for integral anti-wind-up correction
+ * - failAngle: angle at which the motors on the robot will turn off
+ * - scanFreq: frequency of refresh for the IMU
+ *
+ * return: OutputSat: duty cycle of PWM
+ * Author: Hardy Nelson & Kushant Gounder
+ * Date: April.19/2018
+ * Revision:
+ *************************************************************************************/
+
+int32_t pid (double setPoint, double currAngle, double kp, double ki, double kd, double kc, double failAngle, double scanFreq)
 {
     volatile static double error;
     volatile static double lastError;

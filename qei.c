@@ -39,6 +39,17 @@
 volatile int qeiPosition;
 
 
+/************************************************************************************
+ * Function: qeiInit
+ * initialize encoders
+
+ * argument: void
+ * return: void
+ * Author: Hardy Nelson & Kushant Gounder
+ * Date: March.21/2018
+ * Revision:
+ *************************************************************************************/
+
 uint8_t qeiInit(void) {
 
     /*
@@ -98,6 +109,20 @@ uint8_t qeiInit(void) {
     return EXIT_SUCCESS;
 }
 
+/************************************************************************************
+ * Function: qeiGetPos
+ * get position from each encoder for each wheel
+
+ * argument:
+ * leftmotor: pointer for variable holding left motor position
+ * rightmotor: pointer for variable holding right motor position
+ *
+ * return: 0
+ * Author: Hardy Nelson & Kushant Gounder
+ * Date: March.21/2018
+ * Revision:
+ *************************************************************************************/
+
 uint8_t qeiGetPos(double* leftMotor, double* rightMotor) {
 
     // uint32_t posLeft, posRight;
@@ -111,6 +136,18 @@ uint8_t qeiGetPos(double* leftMotor, double* rightMotor) {
 
     return EXIT_SUCCESS;
 }
+
+/************************************************************************************
+ * Function: qeiResetPos
+ * reset encoder for each motor
+
+ * argument: void
+ *
+ * return: 0
+ * Author: Hardy Nelson & Kushant Gounder
+ * Date: March.21/2018
+ * Revision:
+ *************************************************************************************/
 
 uint8_t qeiResetPos(void) {
 

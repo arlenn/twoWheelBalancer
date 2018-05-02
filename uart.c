@@ -63,7 +63,7 @@ uint8_t uartInit(void) {
     UARTClockSourceSet(UART1_BASE, UART_CLOCK_PIOSC); //16Mhz crystal oscillator
     UARTStdioConfig(1, 38400, 16000000);  //port 1, baud-rate, 16MHz oscillator magic number
 
-    IntPrioritySet(INT_UART1, 0xE0)  //lowest priority
+    IntPrioritySet(INT_UART1, 0xE0);  //lowest priority
 
     IntEnable(INT_UART1); //enable the UART interrupt
 
@@ -78,7 +78,7 @@ uint8_t uartInit(void) {
 
  * argument: void
  * return: void
- * Author: Hardy Nelson
+ * Author: Hardy Nelson & Kushant Gounder
  * Date:
  * Revision:
  *************************************************************************************/

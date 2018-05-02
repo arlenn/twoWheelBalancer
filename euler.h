@@ -14,7 +14,6 @@
 
 void InitIMUEuler(void);
 
-void ResetIMU(void);
 
 void GetEulerAngles(double *euler_h_d, double *euler_r_d, double *euler_p_d);
 
