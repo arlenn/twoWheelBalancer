@@ -46,6 +46,8 @@ int main(void) {
 
     IntMasterEnable(); //enable processor interrupts
 
+    calibIMU();
+
     //initial conditions
     kp = 4.100;
     ki = 0.017;
@@ -79,7 +81,7 @@ void Timer0IntHandler(void)
     GetEulerAngles(&euler_h, &euler_r, &euler_p);  //read values from the IMU, unit: degree
     qeiGetPos(&leftMotorPos, &rightMotorPos);  //read values from the encoders, unit: mm
 
-     outputSAT = pid(0.0, euler_p, kp, ki, kd, kc, 85.0, SAMPLERATE); //setpoint deg., measurement, kp, ki, kd,
+     outputSAT = pid(re, euler_p, kp, ki, kd, kc, 80.0, SAMPLERATE); //setpoint deg., measurement, kp, ki, kd,
                                                                                  //give-up angle deg., full-power angle deg.,
                                                                                  //sample-time
 

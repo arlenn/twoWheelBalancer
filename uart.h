@@ -17,5 +17,6 @@ extern double kp;
 extern double ki;
 extern double kd;
 extern double kc;
+extern double re;
 
 #endif /* UART_H_ */

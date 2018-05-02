@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <math.h>
 #include "uartstdio.h"
 #include "inc/hw_gpio.h"
 #include "inc/hw_memmap.h"
@@ -50,19 +51,17 @@ int32_t pid (double setPoint, double currAngle, double kp, double ki, double kd,
     volatile static double lastError;
     volatile static double integral;
     volatile static double derivative;
-    volatile static double deltaTime;
+    //volatile static double deltaTime;
     volatile static int32_t output;
     volatile static int32_t outputSAT;
     volatile static uint32_t dir;
     volatile static double MAXoutput = 100;
 
-    /*
-     * correct orientation
-     */
-    //if (currAngle >= 0.0) currAngle = currAngle - 180.0;
-    //else currAngle = currAngle + 180.0;
+    //deltaTime = 1.0/scanFreq;
 
-    deltaTime = 1.0/scanFreq;
+    //correction
+    //currAngle = currAngle + 4.0;
+
 
     /*
     ///////////////////////////////////////////////////// first try for error calc
@@ -82,31 +81,23 @@ int32_t pid (double setPoint, double currAngle, double kp, double ki, double kd,
     lastError = error;
 
     output = (int32_t) (kp * error + integral + derivative);
-    //////////////////////////////////////////////////////
-
-    if(abs(output) > MAXoutput){
-        outputSAT = 100;
-    }
-    else{
-       outputSAT = output;
-    }
-
     /////////////////////////////////////////////////////
 
-    /*
-     * determine direction
-     */
+    // Bind output 0 - 100%
+    if(abs(output) > MAXoutput) outputSAT = 100;
+    else outputSAT = output;
+
+    // Add -2/+2 deg. dead-band
+    //if(fabs(currAngle) < 0.5 ) outputSAT = 0.0;
+
+    // determine direction
     if (outputSAT < 0) dir = REVERSE;
     else dir = FORWARD;
 
-    /*
-     * bound PWM duty
-     */
-   // if (fabs(outputSAT) > 100.0 ) outputSAT = 100.0;
-   // else if (fabs(outputSAT) < minPercent ) outputSAT = minPercent;  //this min thing might not be a good idea?
-
+    // system has failed? turn off motors
     if (fabs(currAngle) > failAngle) outputSAT = 0.0;
 
+    // command motors
     mtrDrvSpeed(MOTOR_LEFT, dir, (abs(outputSAT)) );
     mtrDrvSpeed(MOTOR_RIGHT, dir, (abs(outputSAT)) );
 
