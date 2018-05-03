@@ -67,10 +67,11 @@ void calibIMU(void)
     ///////////////////////////////wait until sensor is calibrated
     while(CalibStat < 240){
     BNO055_I2C_read_BB(BNO055_I2C_ADDR1, BNO055_CALIB_STAT_ADDR, &CalibStat,1);
+    UARTprintf("\033[H");  //clear terminal screen
     UARTprintf("not calibrated: CalibStat = %i\r", (int)CalibStat);
     }
 
-    UARTprintf("\n calibrated : CalibStat = %i\n", (int)CalibStat);
+    UARTprintf("\ncalibrated : CalibStat = %i\n", (int)CalibStat);
 }
 
 

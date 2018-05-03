@@ -12,7 +12,7 @@
 
 uint8_t qeiInit(void);
 
-uint8_t qeiGetPos(double* leftMotor, double* rightMotor);
+uint8_t qeiGetPos(uint32_t* leftMotor, uint32_t* rightMotor);
 
 uint8_t qeiResetPos(void);
 

@@ -35,7 +35,19 @@ double kp = 0;
 double ki = 0;
 double kd = 0;
 double kc = 0;
-double re = -4.0;
+double re = 0;
+
+double lmkp = 0;
+double lmki = 0;
+double lmkd = 0;
+double lmkc = 0;
+double lmre = 0;
+
+double rmkp = 0;
+double rmki = 0;
+double rmkd = 0;
+double rmkc = 0;
+double rmre = 0;
 
 #define MAX_STR_LEN 24
 

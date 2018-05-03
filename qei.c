@@ -123,16 +123,10 @@ uint8_t qeiInit(void) {
  * Revision:
  *************************************************************************************/
 
-uint8_t qeiGetPos(double* leftMotor, double* rightMotor) {
+uint8_t qeiGetPos(uint32_t* leftMotor, uint32_t* rightMotor) {
 
-    // uint32_t posLeft, posRight;
-
-    // wheel circumference = ~670mm +/-
-    // 20 QPPM encoder
-    // 33.5 mm/pulse -> kw
-
-    *leftMotor = 33.5f * QEIPositionGet(QEI0_BASE);
-    *rightMotor = -33.5f * QEIPositionGet(QEI1_BASE);
+    *leftMotor = QEIPositionGet(QEI0_BASE);
+    *rightMotor = -QEIPositionGet(QEI1_BASE);
 
     return EXIT_SUCCESS;
 }
@@ -151,8 +145,8 @@ uint8_t qeiGetPos(double* leftMotor, double* rightMotor) {
 
 uint8_t qeiResetPos(void) {
 
-    QEIPositionSet(QEI0_BASE, 0);
-    QEIPositionSet(QEI1_BASE, 0);
+    QEIPositionSet(QEI0_BASE, UINT32_MAX / 2);
+    QEIPositionSet(QEI1_BASE, UINT32_MAX / 2);
 
     return EXIT_SUCCESS;
 }
