@@ -8,6 +8,7 @@
 #include "uart.h"
 #include "mtrDrv.h"
 #include "euler.h"
+#include "qei.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -37,17 +38,20 @@ double kd = 0;
 double kc = 0;
 double re = 0;
 
-double lmkp = 0;
-double lmki = 0;
-double lmkd = 0;
-double lmkc = 0;
-double lmre = 0;
+double pkp = 0;
+double pki = 0;
+double pkd = 0;
+double pkc = 0;
+double pre = 0;
+double pa = 0;
 
 double rmkp = 0;
 double rmki = 0;
 double rmkd = 0;
 double rmkc = 0;
 double rmre = 0;
+
+double disturbancePercent;
 
 #define MAX_STR_LEN 24
 
@@ -76,11 +80,14 @@ uint8_t uartInit(void) {
     UARTClockSourceSet(UART1_BASE, UART_CLOCK_PIOSC); //16Mhz crystal oscillator
     UARTStdioConfig(1, 38400, 16000000);  //port 1, baud-rate, 16MHz oscillator magic number
 
-    IntPrioritySet(INT_UART1, 0xE0);  //lowest priority
+    IntPrioritySet(INT_UART1, 0xB0);  //priority
 
     IntEnable(INT_UART1); //enable the UART interrupt
 
     UARTIntEnable(UART1_BASE, UART_INT_RX | UART_INT_RT); //only enable RX and TX interrupts
+
+    //UARTCharPut(UART1_BASE, '12');  //form-feed, clear the screen
+    UARTprintf(UART1_BASE,"\033[2J");
 
     return EXIT_SUCCESS;
 }
@@ -102,11 +109,22 @@ void UartGetK(void){
     static uint32_t bufflen = MAX_STR_LEN;
     static char *delimeter = { " \n\r" };
     static char *command;
+
+    //angular gain
     static char *kpString;
     static char *kiString;
     static char *kdString;
     static char *kcString;
     static char *reString;
+
+
+    //positional gain
+    static char *pkpString;
+    static char *pkiString;
+    static char *pkdString;
+    static char *pkcString;
+    static char *paString;
+
 
     UARTgets(buffer, bufflen);
 
@@ -122,6 +140,12 @@ void UartGetK(void){
     {
         mtrDrvEnable(MOTOR_LEFT, false);
         mtrDrvEnable(MOTOR_RIGHT, false);
+    }
+
+    else if (!(strcmp(command, "hm")))
+    {
+        disturbancePercent = 0.0;
+        qeiResetPos();
     }
 
     else if (!(strcmp(command, "kp")))
@@ -168,6 +192,40 @@ void UartGetK(void){
         kcString = strtok('\0', delimeter);
         kc = atof(kcString);
     }
+
+    // positional PID
+
+    else if (!(strcmp(command, "pkp")))
+    {
+        pkpString = strtok('\0', delimeter);
+        pkp = atof(pkpString);
+    }
+
+    else if (!(strcmp(command, "pki")))
+    {
+        pkiString = strtok('\0', delimeter);
+        pki = atof(pkiString);
+    }
+
+    else if (!(strcmp(command, "pkd")))
+    {
+        pkdString = strtok('\0', delimeter);
+        pkd = atof(pkdString);
+    }
+
+    else if (!(strcmp(command, "pkc")))
+    {
+        pkcString = strtok('\0', delimeter);
+        pkc = atof(pkcString);
+    }
+
+    else if (!(strcmp(command, "pa")))
+    {
+        paString = strtok('\0', delimeter);
+        pa = atof(paString);
+    }
+
+    //catchall
 
     else
     {

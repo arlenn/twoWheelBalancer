@@ -19,17 +19,20 @@ extern double kd;
 extern double kc;
 extern double re;
 
-extern double lmkp;
-extern double lmki;
-extern double lmkd;
-extern double lmkc;
-extern double lmre;
+extern double pkp;
+extern double pki;
+extern double pkd;
+extern double pkc;
+extern double pre;
+extern double pa;
 
 extern double rmkp;
 extern double rmki;
 extern double rmkd;
 extern double rmkc;
 extern double rmre;
+
+extern double disturbancePercent;
 
 
 #endif /* UART_H_ */

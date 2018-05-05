@@ -53,7 +53,7 @@ int32_t pid (double setPoint, double currAngle, double kp, double ki, double kd,
     volatile static double derivative;
     volatile static int32_t output;
     volatile static int32_t outputSAT;
-    volatile static double MAXoutput = 100;
+    volatile static int32_t MAXoutput = 100;
 
     // C2000 math for error calc
     error = setPoint - currAngle;
@@ -63,8 +63,9 @@ int32_t pid (double setPoint, double currAngle, double kp, double ki, double kd,
 
     output = (int32_t) (kp * error + integral + derivative);
 
-    // Bind output 0 - 100%
-    if(abs(output) > MAXoutput) outputSAT = MAXoutput;
+    // Bind output -100% +/- 100%
+    if(output > MAXoutput) outputSAT = MAXoutput;
+    else if(output < -MAXoutput) outputSAT = -MAXoutput;
     else outputSAT = output;
 
     return outputSAT;
@@ -95,7 +96,7 @@ int32_t pid (double setPoint, double currAngle, double kp, double ki, double kd,
  * Revision:
  *************************************************************************************/
 
-int32_t motorPid (double setPoint, double currDisp, double kp, double ki, double kd, double kc)
+int32_t positionPid (double setPoint, double currDisp, double kp, double ki, double kd, double kc)
 {
     volatile static double error;
     volatile static double lastError;
@@ -103,8 +104,7 @@ int32_t motorPid (double setPoint, double currDisp, double kp, double ki, double
     volatile static double derivative;
     volatile static int32_t output;
     volatile static int32_t outputSAT;
-    volatile static uint32_t dir;
-    volatile static double MAXoutput = 20;
+    volatile static int32_t MAXoutput = 100;
 
     // C2000 math for error calc
     error = setPoint - currDisp;
@@ -114,8 +114,9 @@ int32_t motorPid (double setPoint, double currDisp, double kp, double ki, double
 
     output = (int32_t) (kp * error + integral + derivative);
 
-    // Bind output 0 - 100%
-    if(abs(output) > MAXoutput) outputSAT = MAXoutput;
+    // Bind output -100% - 100%
+    if(output > MAXoutput) outputSAT = MAXoutput;
+    else if(output < -MAXoutput) outputSAT = -MAXoutput;
     else outputSAT = output;
 
     return outputSAT;
