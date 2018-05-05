@@ -54,13 +54,13 @@ int main(void) {
     //initial conditions
     kp = 4.100;
     ki = 0.017;
-    kd = 0.0065;  //0.0069
-    kc = 0.016;  //0.0165
+    kd = 0.0065;
+    kc = 0.016;
     re = -4.000;  //vertical offset
 
     pkp = 0.015;
     pki = 0.000;
-    pkd = 0.070;
+    pkd = 1.070;
     pkc = 0.000;
     pa = 3.0;
 
@@ -71,7 +71,7 @@ int main(void) {
 
 
     while (1){
-       UARTprintf("currAngle= %4i, outputSAT= %4i, distrb:= %4i, left:= %4u, right:= %4u\r", (int)euler_p, (int)outputSAT, (int)disturbance, leftMotorPos, rightMotorPos);
+       UARTprintf("currAngle= %4i, outputSAT= %4i, distrb:= %4i, left:= %4i, right:= %4i    End\r", (int)euler_p, (int)outputSAT, (int)disturbance, leftMotorPos - (UINT32_MAX / 2), rightMotorPos - (UINT32_MAX / 2));
     }
 
     return 0;
@@ -108,9 +108,9 @@ void Timer0IntHandler(void)
 
     disturbance = pa * disturbancePercent / 100.0;
 
-    //bind pitch disturbance
-    if(disturbance > pa) disturbance = pa;
-    if(disturbance < -pa) disturbance = -pa;
+//    //bind pitch disturbance
+//    if(disturbance > 0) disturbance = pa;
+//    if(disturbance < 0) disturbance = -pa;
 
     outputSAT = pid( (re + disturbance), euler_p, kp, ki, kd, kc ); //setpoint deg., measurement, kp, ki, kd,
                                                                   //give-up angle deg., full-power angle deg.,
