@@ -106,6 +106,16 @@ uint8_t qeiInit(void) {
     QEIPositionSet(QEI0_BASE, 0);
     QEIPositionSet(QEI1_BASE, 0);
 
+
+    //for velocity initialization
+
+    QEIVelocityConfigure(QEI0_BASE, QEI_VELDIV_1, 10000);
+    QEIVelocityConfigure(QEI1_BASE, QEI_VELDIV_1, 10000);
+
+    QEIVelocityEnable(QEI0_BASE);
+    QEIVelocityEnable(QEI1_BASE);
+
+
     return EXIT_SUCCESS;
 }
 
@@ -147,6 +157,30 @@ uint8_t qeiResetPos(void) {
 
     QEIPositionSet(QEI0_BASE, UINT32_MAX / 2);
     QEIPositionSet(QEI1_BASE, UINT32_MAX / 2);
+
+    return EXIT_SUCCESS;
+}
+
+
+
+/************************************************************************************
+ * Function: qeiGetVel
+ * get velocity from each encoder for each wheel
+
+ * argument:
+ * leftmotor: pointer for variable holding left motor velocity
+ * rightmotor: pointer for variable holding right motor velocity
+ *
+ * return: 0
+ * Author: Hardy Nelson & Kushant Gounder
+ * Date: May.8/2018
+ * Revision:
+ *************************************************************************************/
+
+uint8_t qeiGetVelocity(int32_t* leftMotor, int32_t* rightMotor){
+
+    *leftMotor = QEIVelocityGet(QEI0_BASE);
+    *rightMotor = -QEIVelocityGet(QEI1_BASE);
 
     return EXIT_SUCCESS;
 }
