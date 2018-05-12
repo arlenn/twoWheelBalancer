@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 
-uint8_t qeiInit(void);
+uint8_t qeiInit(uint32_t freq);
 
 uint8_t qeiGetPos(uint32_t* leftMotor, uint32_t* rightMotor);
 

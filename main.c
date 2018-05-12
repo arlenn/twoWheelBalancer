@@ -25,8 +25,10 @@
 #include "driverlib/interrupt.h"
 #include "driverlib/timer.h"
 #include "uartstdio.h"
+#include "specialMath.h"
 
 #define SAMPLERATE 100 //Hz
+
 
 double euler_h, euler_r, euler_p;
 double disturbance;
@@ -46,7 +48,7 @@ int main(void) {
     InitIMUEuler();
     schedulerInit(SAMPLERATE); //hz
     mtrDrvInit(64);  //PWM clock, divide system clock by 64, 2 -> 64, two's compliment
-    qeiInit();
+    qeiInit(SAMPLERATE);
     qeiResetPos();  //reset encoder counts
 
     IntMasterEnable(); //enable processor interrupts
@@ -100,13 +102,14 @@ void Timer0IntHandler(void)
     static uint32_t dir;
     //static double disturbance;
 
+
     TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
 
     //test velocity encoders
-    qeiGetVelocity(&leftMotorVel, &rightMotorVel);
+    //qeiGetVelocity(&leftMotorVel, &rightMotorVel);
 
-    LRPM = (SysCtlClockGet()*leftMotorVel*60) / (2500*480*4);
-    RRPM = (SysCtlClockGet()*rightMotorVel*60) / (2500*480*4);
+    //LRPM = (SysCtlClockGet()*leftMotorVel*60) / (2500*480*4);
+    //RRPM = (SysCtlClockGet()*rightMotorVel*60) / (2500*480*4);
 
     //rpm = (clock * (2 ^ VELDIV) * SPEED * 60) ÷ (LOAD * ppr * edges)
     //////////////////////////////////
@@ -115,7 +118,6 @@ void Timer0IntHandler(void)
     // Do the thing
     GetEulerAngles(&euler_h, &euler_r, &euler_p);  //read values from the IMU, unit: degree
     qeiGetPos(&leftMotorPos, &rightMotorPos);  //read values from the encoders, unit: mm
-
 
     disturbancePercent = (double) positionPid(UINT32_MAX / 2, rightMotorPos, pkp, pki, pkd, pkc);
 

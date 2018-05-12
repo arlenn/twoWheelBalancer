@@ -50,7 +50,7 @@ volatile int qeiPosition;
  * Revision:
  *************************************************************************************/
 
-uint8_t qeiInit(void) {
+uint8_t qeiInit(uint32_t freq) {
 
     /*
      * Enable QEI Peripherals
@@ -109,8 +109,8 @@ uint8_t qeiInit(void) {
 
     //for velocity initialization
 
-    QEIVelocityConfigure(QEI0_BASE, QEI_VELDIV_1, 10000);
-    QEIVelocityConfigure(QEI1_BASE, QEI_VELDIV_1, 10000);
+    QEIVelocityConfigure(QEI0_BASE, QEI_VELDIV_1, SysCtlClockGet() / freq);
+    QEIVelocityConfigure(QEI1_BASE, QEI_VELDIV_1, SysCtlClockGet() / freq);
 
     QEIVelocityEnable(QEI0_BASE);
     QEIVelocityEnable(QEI1_BASE);
